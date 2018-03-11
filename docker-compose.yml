@@ -6,4 +6,23 @@ services:
       - server
   server:
     build: ./server
+  syslog:
+    build: ./syslog
+    depends_on:
+      - client
+      - server
+    cap_add:
+      - NET_BIND_SERVICE
+      - NET_BROADCAST
+      - NET_RAW
+      - DAC_READ_SEARCH
+      - DAC_OVERRIDE
+      - CHOWN
+      - SYSLOG
+    ports:
+      - 601:601/tcp
+    volumes:
+      - syslog_logs:/var/log
 
+volumes:
+  syslog_logs:
