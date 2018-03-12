@@ -1,4 +1,4 @@
-# xenonym
+# iridium
 Putting network logs on a blockchain
 
 1) Make sure you have docker installed.
