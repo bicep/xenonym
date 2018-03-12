@@ -1,5 +1,4 @@
-FROM ubuntu
-RUN apt-get update \
-    && apt-get install -y curl
+FROM alpine
+RUN apk add --no-cache curl
 COPY entrypoint.sh /entrypoint.sh
-CMD [ "bash", "/entrypoint.sh" ]
+CMD [ "sh", "/entrypoint.sh" ]
