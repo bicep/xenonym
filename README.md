@@ -8,3 +8,4 @@ Putting network logs on a blockchain
 - syslog-ng: `syslog:601`/`localhost:601`
 - Elasticsearch: `elastic:9200`/`localhost:9200`
 - Kibana: `elastic:5601`/`localhost:5601`
+- Ganache: `ganache:8545`/`localhost:8545`
