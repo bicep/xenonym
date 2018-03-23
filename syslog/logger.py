@@ -1,47 +1,22 @@
 
-
-class LogDestination(object):
-
-    def open(self):
-        """Open a connection to the target service
-
-        Should return False if opening fails"""
-        return True
-
-    def close(self):
-        """Close the connection to the target service"""
-        pass
-
-    def is_opened(self):
-        """Check if the connection to the target is able to receive messages"""
-        return True
-
-    def init(self, options):
-        """This method is called at initialization time
-
-        Should return false if initialization fails"""
-        return True
-
-    def deinit(self):
-        """This method is called at deinitialization time"""
-        pass
-
-    def send(self, msg):
-        """Send a message to the target service
-
-        It should return True to indicate success, False will suspend the
-        destination for a period specified by the time-reopen() option."""
-        return True
+import utils as utils
+import constants as constants
+from LogDestination import LogDestination
+from MockBlockchain import MockBlockchain
 
 class BlockchainDestination(LogDestination):
     def __init__(self):
+        self.blockchain = None
         self.outfile = None
         self._is_opened = False
 
     def init(self, options):
+        self.blockchain = MockBlockchain()
+
         self.outfile = open("/tmp/blockchain.txt", "a")
         self.outfile.write("initialized with {}\n".format(options))
         self.outfile.flush()
+
         return True
 
     def is_opened(self):
@@ -64,10 +39,17 @@ class BlockchainDestination(LogDestination):
         self.outfile.close()
 
     def send(self, msg):
-        self.outfile.write("Name Value Pairs are:\n")
+        message_hash = utils.hash_function(str(msg))
+        prev_hash = self.blockchain.get_latest_block_hash()
+        if prev_hash is None:
+            prev_hash = constants.GENESIS_HASH
 
-        for key,v in msg.items():
-            self.outfile.write(str(key) + " = " + str(v) + "\n")
-        self.outfile.write("________________________\n\n")
+        current_hash = utils.hash_together(message_hash, prev_hash)
+        self.blockchain.add(current_hash)
+
+        self.outfile.write("previous hash is " + prev_hash + "\n")
+        self.outfile.write("current hash is " + current_hash + "\n")
+        self.outfile.write("________________________\n")
         self.outfile.flush()
+
         return True
