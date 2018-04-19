@@ -3,5 +3,5 @@
 while true
 do 
   curl --silent server:80 > dev/null
-  sleep 5
+  sleep 150
 done

@@ -1,5 +1,11 @@
 version: '3'
 services:
+  dashboard:
+    build: ./dashboard
+    depends_on:
+      - client
+    ports:
+      - 8000:8000/tcp
   client:
     build: ./client
     depends_on:
